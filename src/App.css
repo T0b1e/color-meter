@@ -408,21 +408,21 @@ html, body, #app {
 .drop-zone.dragging .drop-icon { color: var(--accent); }
 
 .canvas-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
 }
 
 .upload-canvas {
   max-width: 100%;
   max-height: 100%;
   display: block;
-  object-fit: contain;
   cursor: crosshair;
-  border-radius: 4px;
+  border-radius: 6px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.18);
 }
 
 .canvas-crosshair {
@@ -603,6 +603,89 @@ html, body, #app {
 }
 
 .swatch-hex--copied { color: var(--accent); font-weight: 700; }
+
+/* ── Save Color button ───────────────────────────────────────────── */
+.save-color-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  margin-top: 2px;
+}
+
+.save-color-btn:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.save-color-btn--saved,
+.save-color-btn--saved:hover {
+  color: var(--accent);
+  border-color: #ddd6fe;
+  background: var(--accent-bg);
+  cursor: default;
+}
+
+/* ── Saved Colors panel ──────────────────────────────────────────── */
+.clear-all-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.clear-all-btn:hover { color: var(--danger); border-color: var(--danger); }
+
+.saved-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.saved-swatch .swatch-block {
+  cursor: pointer;
+}
+
+.saved-swatch-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+  padding: 0;
+}
+
+.saved-swatch:hover .saved-swatch-remove { opacity: 1; }
+.saved-swatch-remove:hover { background: var(--danger); }
 
 /* ── Export Panel ────────────────────────────────────────────────── */
 .export-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
@@ -819,8 +902,9 @@ html, body, #app {
   .tab-btn    { padding: 4px 11px; font-size: 12px; }
   .lang-btn   { font-size: 12px; padding: 4px 11px; }
   .panel      { padding: 15px; }
-  .upload-wrapper { padding: 16px; }
+  .upload-wrapper { padding: 12px; }
   .drop-zone  { max-width: 100%; aspect-ratio: 3/2; }
+  .canvas-container { padding: 10px; }
 }
 
 @media (max-width: 400px) {

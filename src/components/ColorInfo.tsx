@@ -2,10 +2,12 @@ import { useState } from 'react'
 import type { ColorInfo as ColorInfoType } from '../utils/colorUtils'
 import { formatHsl } from '../utils/colorUtils'
 import { useLang } from '../i18n'
-import { CopyIcon, CheckIcon } from './Icons'
+import { CopyIcon, CheckIcon, BookmarkIcon } from './Icons'
 
 interface Props {
   color: ColorInfoType | null
+  isSaved?: boolean
+  onSave?: (color: ColorInfoType) => void
 }
 
 function CopyField({ label, value }: { label: string; value: string }) {
@@ -43,7 +45,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
   )
 }
 
-export default function ColorInfo({ color }: Props) {
+export default function ColorInfo({ color, isSaved, onSave }: Props) {
   const { s } = useLang()
 
   if (!color) {
@@ -69,6 +71,17 @@ export default function ColorInfo({ color }: Props) {
         <CopyField label={s.hsl} value={formatHsl(hsl)} />
         <CopyField label={s.name} value={name} />
       </div>
+      {onSave && (
+        <button
+          type="button"
+          className={`save-color-btn ${isSaved ? 'save-color-btn--saved' : ''}`}
+          onClick={() => onSave(color)}
+          disabled={isSaved}
+        >
+          <BookmarkIcon filled={isSaved} />
+          {isSaved ? s.alreadySaved : s.saveColor}
+        </button>
+      )}
     </div>
   )
 }

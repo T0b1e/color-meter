@@ -17,6 +17,17 @@ export default function ImageUploadMode({ onColor, onPalette }: Props) {
   const [hasImage, setHasImage] = useState(false)
   const [dragging, setDragging] = useState(false)
 
+  // Draw the image to the canvas after it's mounted (hasImage flips to true)
+  useEffect(() => {
+    const img = imgRef.current
+    const canvas = canvasRef.current
+    if (!img || !canvas) return
+    canvas.width = img.width
+    canvas.height = img.height
+    const ctx = canvas.getContext('2d')!
+    ctx.drawImage(img, 0, 0)
+  }, [hasImage])
+
   const loadImage = useCallback(
     (file: File) => {
       const reader = new FileReader()
@@ -25,22 +36,24 @@ export default function ImageUploadMode({ onColor, onPalette }: Props) {
         const img = new Image()
         img.onload = () => {
           imgRef.current = img
-          const canvas = canvasRef.current
-          if (!canvas) return
-          canvas.width = img.width
-          canvas.height = img.height
-          const ctx = canvas.getContext('2d')!
+
+          // Use a temporary canvas to extract colors without needing the ref canvas
+          const tmp = document.createElement('canvas')
+          tmp.width = img.width
+          tmp.height = img.height
+          const ctx = tmp.getContext('2d')!
           ctx.drawImage(img, 0, 0)
-          setHasImage(true)
 
           const thief = new ColorThief()
-          const palette = thief.getPalette(img, 6) as [number, number, number][]
-          onPalette(palette.map(([r, g, b]) => ({ r, g, b })))
+          const palette = thief.getPalette(img, 6) as [number, number, number][] | null
+          if (palette) onPalette(palette.map(([r, g, b]) => ({ r, g, b })))
 
           const cx = Math.floor(img.width / 2)
           const cy = Math.floor(img.height / 2)
           const pixel = ctx.getImageData(cx, cy, 1, 1).data
           onColor(buildColorInfo(pixel[0], pixel[1], pixel[2]))
+
+          setHasImage(true)
         }
         img.src = src
       }
@@ -80,11 +93,13 @@ export default function ImageUploadMode({ onColor, onPalette }: Props) {
       const pixel = ctx.getImageData(x, y, 1, 1).data
       onColor(buildColorInfo(pixel[0], pixel[1], pixel[2]))
 
-      // Move crosshair using CSS custom properties to avoid inline styles
+      // Position crosshair relative to the container (not the canvas),
+      // because the canvas is centered and may not start at the container's origin.
       const ch = crosshairRef.current
+      const containerRect = canvas.parentElement!.getBoundingClientRect()
       if (ch) {
-        ch.style.setProperty('--ch-x', `${e.clientX - rect.left}px`)
-        ch.style.setProperty('--ch-y', `${e.clientY - rect.top}px`)
+        ch.style.setProperty('--ch-x', `${e.clientX - containerRect.left}px`)
+        ch.style.setProperty('--ch-y', `${e.clientY - containerRect.top}px`)
         ch.classList.add('visible')
       }
     },

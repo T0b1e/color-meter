@@ -6,6 +6,8 @@ import ColorInfo from './components/ColorInfo'
 import Palette from './components/Palette'
 import ExportPanel from './components/ExportPanel'
 import DisclaimerModal from './components/DisclaimerModal'
+import SavedColors from './components/SavedColors'
+import { useSavedColors } from './hooks/useSavedColors'
 import type { ColorInfo as ColorInfoType, RgbColor } from './utils/colorUtils'
 import { buildColorInfo } from './utils/colorUtils'
 
@@ -17,10 +19,16 @@ function AppInner() {
   const [color, setColor] = useState<ColorInfoType | null>(null)
   const [palette, setPalette] = useState<RgbColor[]>([])
 
+  const { saved, save, remove, clearAll, isSaved } = useSavedColors()
+
   const handleColor = useCallback((c: ColorInfoType) => setColor(c), [])
   const handlePalette = useCallback((p: RgbColor[]) => setPalette(p), [])
   const handlePaletteSelect = useCallback(
     (c: RgbColor) => setColor(buildColorInfo(c.r, c.g, c.b)),
+    [],
+  )
+  const handleSavedSelect = useCallback(
+    (c: ColorInfoType) => setColor(c),
     [],
   )
 
@@ -69,11 +77,21 @@ function AppInner() {
         <div className="right-col">
           <section className="panel">
             <h2 className="panel-title">{s.sampledColor}</h2>
-            <ColorInfo color={color} />
+            <ColorInfo
+              color={color}
+              isSaved={color ? isSaved(color.hex) : false}
+              onSave={save}
+            />
           </section>
 
           <Palette palette={palette} onSelect={handlePaletteSelect} />
           <ExportPanel palette={palette} />
+          <SavedColors
+            saved={saved}
+            onSelect={handleSavedSelect}
+            onRemove={remove}
+            onClearAll={clearAll}
+          />
         </div>
       </main>
 
