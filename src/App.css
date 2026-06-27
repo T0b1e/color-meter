@@ -16,7 +16,7 @@
   --green:      #16a34a;
   --radius:     8px;
   --shadow:     0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
-  --font:       'Krub', 'Segoe UI', sans-serif;
+  --font:       'Kanit', 'Segoe UI', sans-serif;
   --mono:       'Krub', 'Cascadia Code', 'Fira Code', monospace;
 }
 
@@ -67,7 +67,7 @@ html, body, #app {
   display: flex;
   align-items: center;
   color: var(--muted);
-  transition: color 0.15s;
+  transition: color 1s;
   flex-shrink: 0;
 }
 
@@ -98,7 +98,7 @@ html, body, #app {
 }
 
 .app-title {
-  font-family: 'Sarabun', var(--font);
+  font-family: var(--font);
   font-size: 24px;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -513,7 +513,7 @@ html, body, #app {
   border-radius: 7px;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background 0.12s, border-color 0.12s;
+  transition: background 1s, border-color 1s;
   position: relative;
   -webkit-user-select: none;
   user-select: none;
@@ -978,7 +978,7 @@ html, body, #app {
 }
 
 .tos-title {
-  font-family: 'Sarabun', var(--font);
+  font-family: var(--font);
   font-size: 18px;
   font-weight: 700;
   color: #92400e;
@@ -1027,7 +1027,7 @@ html, body, #app {
   border: none;
   background: #000;
   color: #fff;
-  font-family: 'Sarabun', var(--font);
+  font-family: var(--font);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
