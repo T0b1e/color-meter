@@ -27,10 +27,7 @@ function AppInner() {
     (c: RgbColor) => setColor(buildColorInfo(c.r, c.g, c.b)),
     [],
   )
-  const handleSavedSelect = useCallback(
-    (c: ColorInfoType) => setColor(c),
-    [],
-  )
+  const handleSavedSelect = useCallback((c: ColorInfoType) => setColor(c), [])
 
   const toggleLang = () => setLang(lang === 'th' ? 'en' : 'th')
 
@@ -77,11 +74,7 @@ function AppInner() {
         <div className="right-col">
           <section className="panel">
             <h2 className="panel-title">{s.sampledColor}</h2>
-            <ColorInfo
-              color={color}
-              isSaved={color ? isSaved(color.hex) : false}
-              onSave={save}
-            />
+            <ColorInfo color={color} isSaved={color ? isSaved(color.hex) : false} onSave={save} />
           </section>
 
           <Palette palette={palette} onSelect={handlePaletteSelect} />
